@@ -25,7 +25,7 @@ reviewers: [architect, qa]
 branch: agent/partners/T-0055-retenue-creneau
 worktree: ../worktrees/T-0055
 pr: ""
-notes: "Première tranche de F4.1 : seule la retenue de créneau est livrée (prérequis de la saga F4.5). Le reste de F4.1 est listé dans docs/domain/partners.md. Le test d'intégration PostgreSQL (concurrence sur la dernière table, balayage) est opt-in et n'a PAS été exécuté : aucun PostgreSQL sur le poste de l'agent."
+notes: "Première tranche de F4.1 : seule la retenue de créneau est livrée (prérequis de la saga F4.5). Le reste de F4.1 est listé dans docs/domain/partners.md. Test d'intégration PostgreSQL exécuté le 2026-11-09 (6 tests verts, PostgreSQL embarqué)."
 ---
 
 ## Objectif
@@ -40,7 +40,7 @@ de la dernière place, avec libération automatique et événements fiables.
 - [x] Retenue sous verrou de ligne, idempotente par `hold_ref`.
 - [x] Balayage des retenues échues, rejouable (`skip locked`).
 - [x] Événements `slot.held|rejected|released` écrits dans la transaction (outbox) + schémas JSON.
-- [ ] Test d'intégration PostgreSQL exécuté (écrit, non lancé faute de base locale).
+- [x] Test d'intégration PostgreSQL exécuté sur un vrai PostgreSQL embarqué : 8 demandes parallèles sur la dernière table → 1 seule retenue ; balayage rejouable ; outbox sans PII.
 
 ## Hors périmètre
 

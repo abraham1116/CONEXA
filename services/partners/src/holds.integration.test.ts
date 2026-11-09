@@ -39,11 +39,9 @@ describe.skipIf(!TEST_DATABASE_URL)('retenue de créneau sur PostgreSQL', () => 
     outbox = new PartnersOutboxService(() => clock, bus);
     holds = new SlotHoldsService(() => clock, outbox);
 
-    await db.deleteFrom('slot_holds').execute();
+    // Nettoyage limité à nos lignes : d'autres tests partagent la base.
+    await db.deleteFrom('organisations').where('id', '=', ORG).execute();
     await db.deleteFrom('partners_outbox').execute();
-    await db.deleteFrom('slots').execute();
-    await db.deleteFrom('venues').execute();
-    await db.deleteFrom('organisations').execute();
     await db
       .insertInto('organisations')
       .values({
