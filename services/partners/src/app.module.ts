@@ -9,6 +9,8 @@ import {
   OrganisationsController,
   VenuesController,
 } from './partners.controller.js';
+import { AgreementsController } from './agreements.controller.js';
+import { AgreementsService } from './agreements.service.js';
 import { SlotHoldsService } from './holds.service.js';
 import { PartnersInternalController } from './internal.controller.js';
 import { PARTNERS_CLOCK, PARTNERS_EVENTS, PartnersOutboxService } from './outbox.service.js';
@@ -27,6 +29,7 @@ import { PartnersScheduler } from './scheduler.js';
     VenuesController,
     OffersController,
     PartnersInternalController,
+    AgreementsController,
   ],
   providers: [
     { provide: PARTNERS_CLOCK, useValue: () => new Date() },
@@ -34,6 +37,7 @@ import { PartnersScheduler } from './scheduler.js';
     PartnersService,
     PartnersOutboxService,
     SlotHoldsService,
+    AgreementsService,
     PartnersScheduler,
   ],
 })

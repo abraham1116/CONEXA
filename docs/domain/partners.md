@@ -32,11 +32,30 @@ Règles :
 Configuration : `PARTNERS_CRON_ENABLED` (défaut `true`), `PARTNERS_CRON_INTERVAL_MS` (défaut 30 000),
 `SERVICE_TOKEN` pour les appels de service.
 
+## Contrats versionnés et commission figée (T-0056, F4.1)
+
+Un seul contrat actif par organisation (index unique partiel, vérifié par la base).
+
+| Action | Route | Qui |
+|---|---|---|
+| Proposer (taux négocié) | `POST /partners/organisations/:id/agreements` | admin |
+| Lister | `GET /partners/organisations/:id/agreements` | propriétaire ou admin |
+| Signer | `POST /partners/agreements/:id/sign` | propriétaire |
+| Commission d'un lieu | `GET /internal/partners/venues/:id/commission` (service) | saga de réservation |
+
+- `pending_signature` → `active` (signé) → `superseded` (remplacé). Signer remplace l'actif dans la même
+  transaction, sous verrou de l'organisation : des signatures simultanées n'en activent qu'une.
+- Une seule proposition en attente à la fois.
+- La commission d'une réservation est **copiée** du contrat actif au moment de la réservation
+  (`agreement_id`, `version`, `commission_pct`) ; un contrat signé ensuite ne la change pas.
+- Reprise : la migration crée un contrat v1 actif pour chaque organisation déjà active (taux repris).
+- Numéro de reversement (trou n°2) : porté par Payments (`payout-accounts`, T-0023), pas par Partners.
+- Règles pures : `agreements.rules.ts`.
+
 ## Reste à faire pour F4.1
 
-Contrats et API publique des organisations, candidatures et approbation admin ; contrats versionnés
-(un seul actif) ; commission 10 % figée à la réservation (instantané du contrat) ; colonne du numéro
-de reversement (trou n°2) ; compatibilité des routes `/restaurant/*` (restaurant_id = venue_id).
+Candidatures publiques et approbation admin (`/partners/apply`) ; compatibilité des routes
+`/restaurant/*` (restaurant_id = venue_id) ; consommation de `commission` par la saga (F4.5).
 
 ## Vérifier
 

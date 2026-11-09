@@ -101,6 +101,21 @@ export interface PartnersOutboxTable {
   created_at: ColumnType<Date, Date | undefined, never>;
 }
 
+export interface AgreementsTable {
+  id: string;
+  organisation_id: string;
+  version: number;
+  commission_pct: number;
+  status: ColumnType<
+    'pending_signature' | 'active' | 'superseded',
+    'pending_signature' | 'active' | 'superseded' | undefined,
+    'pending_signature' | 'active' | 'superseded'
+  >;
+  created_at: ColumnType<Date, Date | undefined, never>;
+  signed_at: ColumnType<Date | null, undefined, Date | null>;
+  signed_by: ColumnType<string | null, undefined, string | null>;
+}
+
 export interface Database {
   organisations: OrganisationsTable;
   venues: VenuesTable;
@@ -111,6 +126,7 @@ export interface Database {
   offer_redemptions: RedemptionsTable;
   slot_holds: SlotHoldsTable;
   partners_outbox: PartnersOutboxTable;
+  agreements: AgreementsTable;
 }
 
 const handle = createDb<Database>({ connectionString: env.DATABASE_URL, schema: 'partners' });

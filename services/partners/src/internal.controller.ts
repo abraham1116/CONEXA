@@ -1,7 +1,8 @@
-import { Body, Controller, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, UseGuards } from '@nestjs/common';
 import { createServiceTokenGuard } from '@conexa/service-kit';
 import { z } from 'zod';
 
+import { AgreementsService } from './agreements.service.js';
 import { env } from './config.js';
 import { SlotHoldsService } from './holds.service.js';
 import { PartnersOutboxService } from './outbox.service.js';
@@ -16,6 +17,7 @@ export class PartnersInternalController {
   constructor(
     private readonly holds: SlotHoldsService,
     private readonly outbox: PartnersOutboxService,
+    private readonly agreements: AgreementsService,
   ) {}
 
   @UseGuards(ServiceTokenGuard)
@@ -51,5 +53,12 @@ export class PartnersInternalController {
   @HttpCode(200)
   relay() {
     return this.outbox.relay();
+  }
+
+  /** Commission du contrat actif d'un lieu, à copier dans la réservation. */
+  @UseGuards(ServiceTokenGuard)
+  @Get('venues/:id/commission')
+  commission(@Param('id') id: string) {
+    return this.agreements.commissionForVenue(id);
   }
 }
