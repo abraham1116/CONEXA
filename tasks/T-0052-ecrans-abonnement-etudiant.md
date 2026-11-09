@@ -10,6 +10,7 @@ owned_paths:
   - apps/web/src/app/(app)/billing/**
   - apps/web/src/features/money/**
   - docs/domain/money.md
+  - docs/STATUS.md
 reads:
   - docs/product/API.md#3.13
   - docs/product/API.md#3.16
